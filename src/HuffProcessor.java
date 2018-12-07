@@ -103,14 +103,18 @@ public class HuffProcessor {
 	private void codingHelper(HuffNode root, String path, String[] codings) {
 
 		if (root.myLeft == null && root.myRight == null) {
+			System.out.println("leaf");
+			System.out.println("path is "+path);
 			codings[root.myValue] = path;
 			return;
 		}
 		
 		if (root.myLeft != null) {
+			System.out.println("went left");
 			codingHelper(root.myLeft, path + "0", codings);
 		}
 		if (root.myRight != null) {
+			System.out.println("went right");
 			codingHelper(root.myRight, path + "1", codings);
 		}
 	}
