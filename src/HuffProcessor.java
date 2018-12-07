@@ -50,6 +50,10 @@ public class HuffProcessor {
 		writeHeader(root,out);
 		
 		in.reset();
+		System.out.println("printing codings");
+		for (String s : codings) {
+			System.out.println(s);
+		}
 		writeCompressedBits(codings,in,out);
 		out.close();
 
@@ -61,6 +65,7 @@ public class HuffProcessor {
 			int val = in.readBits(BITS_PER_WORD);
 			if (val == -1) break;
 			String code = codings[val];
+			System.out.println("code = "+code);
 			out.writeBits(code.length(), Integer.parseInt(code, 2));
 		}
 		String code = codings[PSEUDO_EOF];
@@ -116,9 +121,7 @@ public class HuffProcessor {
 			int val = in.readBits(BITS_PER_WORD);
 			if (val == -1) break;
 			counts[val] += 1;	//error
-//			System.out.println("index is "+ val);
-//			System.out.println("Counts[index] ...");
-//			System.out.println(counts[val]);
+
 		}
 		counts[PSEUDO_EOF] = 1;
 		return counts;
