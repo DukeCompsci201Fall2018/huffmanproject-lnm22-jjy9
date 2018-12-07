@@ -90,7 +90,7 @@ public class HuffProcessor {
 						break;
 					}
 					else {
-						out.writeBits(9, current.myValue);
+						out.writeBits(8, current.myValue);
 						current = root;
 					}
 				}
