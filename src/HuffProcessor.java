@@ -68,11 +68,21 @@ public class HuffProcessor {
 	}
 
 	private void writeHeader(HuffNode root, BitOutputStream out) {
-		if (root.myLeft != null && root.myRight != null) {
+//		if (root.myLeft != null && root.myRight != null) {
+//			out.writeBits(1, 0);
+//			writeHeader(root.myLeft, out);
+//			writeHeader(root.myRight, out);
+//		}
+		
+		if (root.myLeft != null) {
 			out.writeBits(1, 0);
 			writeHeader(root.myLeft, out);
+		}
+		if (root.myRight != null) {
+			out.writeBits(1, 0);
 			writeHeader(root.myRight, out);
 		}
+		
 		else if (root.myLeft == null && root.myRight == null){
 			out.writeBits(1, 1);
 			out.writeBits(BITS_PER_WORD + 1, root.myValue);
@@ -91,8 +101,11 @@ public class HuffProcessor {
 			codings[root.myValue] = path;
 			return;
 		}
-		else {
+		
+		if (root.myLeft != null) {
 			codingHelper(root.myLeft, path + "0", codings);
+		}
+		if (root.myRight != null) {
 			codingHelper(root.myRight, path + "1", codings);
 		}
 	}
