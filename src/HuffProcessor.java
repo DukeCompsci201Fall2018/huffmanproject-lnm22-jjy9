@@ -127,6 +127,7 @@ public class HuffProcessor {
 
 	private int[] readForCounts(BitInputStream in) {
 		int[] counts = new int[ALPH_SIZE + 1];
+		System.out.println("size of counts is: " + counts);
 		while (true){
 			int val = in.readBits(BITS_PER_WORD);
 			if (val == -1) break;
