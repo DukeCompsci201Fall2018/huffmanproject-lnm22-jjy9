@@ -103,9 +103,9 @@ public class HuffProcessor {
 			int val = in.readBits(BITS_PER_WORD);
 			if (val == -1) break;
 			counts[val] += 1;	//error
-			System.out.println("index is "+in.readBits(BITS_PER_WORD));
-			System.out.println("Counts[index] ...");
-			System.out.println(counts[in.readBits(BITS_PER_WORD)]);
+//			System.out.println("index is "+ val);
+//			System.out.println("Counts[index] ...");
+//			System.out.println(counts[val]);
 		}
 		counts[PSEUDO_EOF] = 1;
 		return counts;
