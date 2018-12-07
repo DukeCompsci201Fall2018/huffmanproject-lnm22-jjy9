@@ -50,10 +50,7 @@ public class HuffProcessor {
 		writeHeader(root,out);
 		
 		in.reset();
-		System.out.println("printing codings");
-		for (String s : codings) {
-			System.out.println(s);
-		}
+		
 		writeCompressedBits(codings,in,out);
 		out.close();
 
@@ -65,7 +62,7 @@ public class HuffProcessor {
 			int val = in.readBits(BITS_PER_WORD);
 			if (val == -1) break;
 			String code = codings[val];
-			System.out.println("code = "+code);
+//			System.out.println("code = "+code);
 			out.writeBits(code.length(), Integer.parseInt(code, 2));
 		}
 		String code = codings[PSEUDO_EOF];
@@ -73,30 +70,31 @@ public class HuffProcessor {
 	}
 
 	private void writeHeader(HuffNode root, BitOutputStream out) {
-//		if (root.myLeft != null && root.myRight != null) {
-//			out.writeBits(1, 0);
-//			writeHeader(root.myLeft, out);
-//			writeHeader(root.myRight, out);
-//		}
-		
-		if (root.myLeft != null) {
+		if (root.myLeft != null && root.myRight != null) {
 			out.writeBits(1, 0);
 			writeHeader(root.myLeft, out);
-		}
-		if (root.myRight != null) {
-			out.writeBits(1, 0);
 			writeHeader(root.myRight, out);
 		}
 		
-		else if (root.myLeft == null && root.myRight == null){
+		if (root.myLeft == null && root.myRight == null){
 			out.writeBits(1, 1);
 			out.writeBits(BITS_PER_WORD + 1, root.myValue);
-		}
+			return;
+		}	
+//		if (root.myLeft != null) {
+//			out.writeBits(1, 0);
+//			writeHeader(root.myLeft, out);
+//		}
+//		if (root.myRight != null) {
+//			out.writeBits(1, 0);
+//			writeHeader(root.myRight, out);
+//		}
+//		
 	}
 
 	private String[] makeCodingsFromTree(HuffNode root) {
 		String[] codings = new String[ALPH_SIZE + 1];
-		System.out.println("size of codings is "+codings.length);
+//		System.out.println("size of codings is "+codings.length);
 		codingHelper(root,"",codings);
 		return codings;
 	}
@@ -110,14 +108,16 @@ public class HuffProcessor {
 			return;
 		}
 		
-		if (root.myLeft != null) {
-			System.out.println("went left");
-			codingHelper(root.myLeft, path + "0", codings);
-		}
-		if (root.myRight != null) {
-			System.out.println("went right");
-			codingHelper(root.myRight, path + "1", codings);
-		}
+//		if (root.myLeft != null) {
+//			System.out.println("went left");
+//			codingHelper(root.myLeft, path + "0", codings);
+//		}
+//		if (root.myRight != null) {
+//			System.out.println("went right");
+//			codingHelper(root.myRight, path + "1", codings);
+//		}
+		codingHelper(root.myLeft, path + "0", codings);
+		codingHelper(root.myRight, path + "1", codings);
 		
 		System.out.println("***printing codings***");
 		for (String s : codings) {
@@ -127,14 +127,19 @@ public class HuffProcessor {
 
 	private int[] readForCounts(BitInputStream in) {
 		int[] counts = new int[ALPH_SIZE + 1];
-		System.out.println("size of counts is: " + counts.length);
+		
 		while (true){
 			int val = in.readBits(BITS_PER_WORD);
 			if (val == -1) break;
-			counts[val] += 1;	//error
-
+			counts[PSEUDO_EOF] = 1;
+			if (val == PSEUDO_EOF) {
+				counts[PSEUDO_EOF] = 1;
+			}
+			else {
+				counts[val] += 1;	//error
+			}
 		}
-		counts[PSEUDO_EOF] = 1;
+		
 		return counts;
 	}
 	
