@@ -1,3 +1,4 @@
+import java.util.PriorityQueue;
 
 /**
  * Although this class has a history of several years,
@@ -41,14 +42,66 @@ public class HuffProcessor {
 	 *            Buffered bit stream writing to the output file.
 	 */
 	public void compress(BitInputStream in, BitOutputStream out){
+		int[] counts = readForCounts(in);
+		HuffNode root = makeTreeFromCounts(counts);
+		String[] codings = makeCodingsFromTree(root);
+		
+		out.writeBits(BITS_PER_INT, HUFF_TREE);
+		writeHeader(root,out);
+		
+		in.reset();
+		writeCompressedBits(codings,in,out);
+		out.close();
 
+
+	}
+	private void writeCompressedBits(String[] codings, BitInputStream in, BitOutputStream out) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void writeHeader(HuffNode root, BitOutputStream out) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private String[] makeCodingsFromTree(HuffNode root) {
+		String[] codings = new String[ALPH_SIZE + 1];
+		return null;
+	}
+
+	private int[] readForCounts(BitInputStream in) {
+		int[] counts = new int[ALPH_SIZE + 1];
 		while (true){
 			int val = in.readBits(BITS_PER_WORD);
 			if (val == -1) break;
-			out.writeBits(BITS_PER_WORD, val);
+			counts[in.readBits(BITS_PER_WORD)] += 1;
+			System.out.println("index is "+in.readBits(BITS_PER_WORD));
+			System.out.println("Counts[index] ...");
+			System.out.println(counts[in.readBits(BITS_PER_WORD)]);
 		}
-		out.close();
+		counts[PSEUDO_EOF] = 1;
+		return counts;
 	}
+	
+	private HuffNode makeTreeFromCounts(int[] counts) {
+/*		PriorityQueue<HuffNode> pq = new PriorityQueue<>();
+
+		for(every index such that freq[index] > 0) {
+		    pq.add(new HuffNode(index,freq[index],null,null);
+		}
+
+		while (pq.size() > 1) {
+		    HuffNode left = pq.remove();
+		    HuffNode right = pq.remove();
+		    // create new HuffNode t with weight from
+		    // left.weight+right.weight and left, right subtrees
+		    pq.add(t);
+		}
+		HuffNode root = pq.remove();*/
+		return null;
+	}
+
 	/**
 	 * Decompresses a file. Output file must be identical bit-by-bit to the
 	 * original.
@@ -90,16 +143,12 @@ public class HuffProcessor {
 						break;
 					}
 					else {
-						out.writeBits(8, current.myValue);
+						out.writeBits(BITS_PER_WORD, current.myValue);
 						current = root;
 					}
 				}
 			}
 		}
-		
-		
-		
-		
 		
 	}
 
