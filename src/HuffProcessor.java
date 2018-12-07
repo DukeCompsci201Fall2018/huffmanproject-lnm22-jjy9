@@ -102,7 +102,7 @@ public class HuffProcessor {
 		while (true){
 			int val = in.readBits(BITS_PER_WORD);
 			if (val == -1) break;
-			counts[in.readBits(BITS_PER_WORD)] += 1;
+			counts[val] += 1;	//error
 			System.out.println("index is "+in.readBits(BITS_PER_WORD));
 			System.out.println("Counts[index] ...");
 			System.out.println(counts[in.readBits(BITS_PER_WORD)]);
