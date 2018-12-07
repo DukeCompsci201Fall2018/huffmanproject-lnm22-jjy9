@@ -96,6 +96,7 @@ public class HuffProcessor {
 
 	private String[] makeCodingsFromTree(HuffNode root) {
 		String[] codings = new String[ALPH_SIZE + 1];
+		System.out.println("size of codings is "+codings.length);
 		codingHelper(root,"",codings);
 		return codings;
 	}
@@ -116,6 +117,11 @@ public class HuffProcessor {
 		if (root.myRight != null) {
 			System.out.println("went right");
 			codingHelper(root.myRight, path + "1", codings);
+		}
+		
+		System.out.println("***printing codings***");
+		for (String s : codings) {
+			System.out.println(s);
 		}
 	}
 
