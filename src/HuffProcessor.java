@@ -143,7 +143,7 @@ public class HuffProcessor {
 		while (pq.size() > 1) {
 		    HuffNode left = pq.remove();
 		    HuffNode right = pq.remove();
-		    HuffNode t = new HuffNode(0, left.myWeight+right.myWeight, null, null);
+		    HuffNode t = new HuffNode(0, left.myWeight+right.myWeight, left, right);
 		    // create new HuffNode t with weight from
 		    // left.weight+right.weight and left, right subtrees
 		    pq.add(t);
@@ -197,12 +197,10 @@ public class HuffProcessor {
 					}
 				}
 			}
-		}
-		
+		}		
 	}
 
 	private HuffNode readTreeHeader(BitInputStream in) {
-		// TODO Auto-generated method stub
 		
 		int bit = in.readBits(1);
 		if (bit == -1) {
