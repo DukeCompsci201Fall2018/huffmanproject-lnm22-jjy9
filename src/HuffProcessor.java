@@ -56,18 +56,45 @@ public class HuffProcessor {
 
 	}
 	private void writeCompressedBits(String[] codings, BitInputStream in, BitOutputStream out) {
-		// TODO Auto-generated method stub
-		
+		 
+		while (true) {
+			int val = in.readBits(BITS_PER_WORD);
+			if (val == -1) break;
+			String code = codings[in.readBits(BITS_PER_WORD)];
+			out.writeBits(code.length(), Integer.parseInt(code, 2));
+		}
+		String code = codings[PSEUDO_EOF];
+		out.writeBits(code.length(), Integer.parseInt(code, 2));
 	}
 
 	private void writeHeader(HuffNode root, BitOutputStream out) {
-		// TODO Auto-generated method stub
-		
+		if (root.myLeft != null && root.myRight != null) {
+			out.writeBits(1, 0);
+			writeHeader(root.myLeft, out);
+			writeHeader(root.myRight, out);
+		}
+		else if (root.myLeft == null && root.myRight == null){
+			out.writeBits(1, 1);
+			out.writeBits(BITS_PER_WORD + 1, root.myValue);
+		}
 	}
 
 	private String[] makeCodingsFromTree(HuffNode root) {
 		String[] codings = new String[ALPH_SIZE + 1];
-		return null;
+		codingHelper(root,"",codings);
+		return codings;
+	}
+
+	private void codingHelper(HuffNode root, String path, String[] codings) {
+
+		if (root.myLeft == null && root.myRight == null) {
+			codings[root.myValue] = path;
+			return;
+		}
+		else {
+			codingHelper(root.myLeft, path + "0", codings);
+			codingHelper(root.myRight, path + "1", codings);
+		}
 	}
 
 	private int[] readForCounts(BitInputStream in) {
@@ -85,21 +112,24 @@ public class HuffProcessor {
 	}
 	
 	private HuffNode makeTreeFromCounts(int[] counts) {
-/*		PriorityQueue<HuffNode> pq = new PriorityQueue<>();
+		PriorityQueue<HuffNode> pq = new PriorityQueue<>();
 
-		for(every index such that freq[index] > 0) {
-		    pq.add(new HuffNode(index,freq[index],null,null);
+		for(int k = 0; k < counts.length; k++) {
+			if (counts[k] > 0) {
+				pq.add(new HuffNode(k, counts[k], null, null));
+			}
 		}
 
 		while (pq.size() > 1) {
 		    HuffNode left = pq.remove();
 		    HuffNode right = pq.remove();
+		    HuffNode t = new HuffNode(0, left.myWeight+right.myWeight, null, null);
 		    // create new HuffNode t with weight from
 		    // left.weight+right.weight and left, right subtrees
 		    pq.add(t);
 		}
-		HuffNode root = pq.remove();*/
-		return null;
+		HuffNode root = pq.remove();
+		return root;
 	}
 
 	/**
@@ -127,7 +157,6 @@ public class HuffProcessor {
 		// TODO Auto-generated method stub
 		
 		HuffNode current = root;
-		System.out.println("ummm hello");
 		while (current != null) {
 			int bit = in.readBits(1);
 			if (bit == -1) {
