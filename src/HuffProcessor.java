@@ -108,21 +108,15 @@ public class HuffProcessor {
 			return;
 		}
 		
-//		if (root.myLeft != null) {
-//			System.out.println("went left");
-//			codingHelper(root.myLeft, path + "0", codings);
-//		}
-//		if (root.myRight != null) {
-//			System.out.println("went right");
-//			codingHelper(root.myRight, path + "1", codings);
-//		}
-		codingHelper(root.myLeft, path + "0", codings);
-		codingHelper(root.myRight, path + "1", codings);
-		
-		System.out.println("***printing codings***");
-		for (String s : codings) {
-			System.out.println(s);
+		if (root.myLeft != null) {
+			System.out.println("went left");
+			codingHelper(root.myLeft, path + "0", codings);
 		}
+		if (root.myRight != null) {
+			System.out.println("went right");
+			codingHelper(root.myRight, path + "1", codings);
+		}
+		
 	}
 
 	private int[] readForCounts(BitInputStream in) {
