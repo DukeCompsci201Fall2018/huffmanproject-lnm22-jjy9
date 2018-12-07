@@ -2,7 +2,6 @@ import java.io.*;
 
 public class HuffMainCompress {
 	public static void main(String[] args) {
-		///hiiiiiiii
 		
 		System.out.println("Huffman Compress Main");
 		File inf = FileSelector.selectFile();
